@@ -11,14 +11,18 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --accent: #5C9EA0;
-    --accent-light: #E6F5F5;
-    --transition-dur: 0.4s;
+    --accent: #5B7EC4;
+    --accent-light: #EBF0FA;
+    --dur: 0.4s;
+    --sense-accent: #5B7EC4;
+    --sense-light: #EBF0FA;
+    --sense-text: #1A3567;
   }
 
   html, body {
     width: 100%;
     height: 100%;
+    min-height: 100dvh;
     overflow: hidden;
   }
 
@@ -26,25 +30,18 @@
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     background: #fff;
     color: #1a1a1a;
-    transition: background var(--transition-dur) ease;
+    transition: background 0.7s ease;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
   }
 
-  /* ── Rotate overlay (portrait only) ─────────────── */
+  /* ── Rotate overlay ─────────────────────────── */
   #rotate-overlay {
     display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 999;
-    background: #1a1a1a;
-    color: #fff;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    text-align: center;
-    padding: 2rem;
+    position: fixed; inset: 0; z-index: 999;
+    background: #1a1a1a; color: #fff;
+    flex-direction: column; align-items: center; justify-content: center;
+    gap: 20px; text-align: center; padding: 2rem;
   }
   #rotate-overlay .rotate-icon {
     font-size: 52px;
@@ -52,305 +49,277 @@
   }
   @keyframes rotate-hint {
     0%, 100% { transform: rotate(0deg); }
-    40%       { transform: rotate(90deg); }
-    60%       { transform: rotate(90deg); }
+    40%, 60%  { transform: rotate(90deg); }
   }
-  #rotate-overlay p {
-    font-size: 15px;
-    opacity: 0.75;
-    line-height: 1.6;
-  }
-  @media (orientation: portrait) {
-    #rotate-overlay { display: flex; }
-  }
+  #rotate-overlay p { font-size: 15px; opacity: 0.75; line-height: 1.6; }
+  @media (orientation: portrait) { #rotate-overlay { display: flex; } }
 
-  /* ── App shell (landscape only) ─────────────────── */
-  #app {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
+  /* ── App shell ──────────────────────────────── */
+  #app { width: 100%; height: 100%; position: relative; }
 
-  /* ── Screens ─────────────────────────────────────── */
+  /* ── Screens ────────────────────────────────── */
   .screen {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 16px) env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 16px);
-    opacity: 0;
-    pointer-events: none;
-    position: absolute;
-    inset: 0;
-    transition: opacity var(--transition-dur) ease;
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 16px)
+             env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 16px);
+    opacity: 0; pointer-events: none;
+    position: absolute; inset: 0;
+    transition: opacity var(--dur) ease;
   }
-  .screen.active {
-    opacity: 1;
-    pointer-events: all;
-    position: relative;
-  }
+  .screen.active { opacity: 1; pointer-events: all; position: relative; }
 
-  /* ── Intro ───────────────────────────────────────── */
+  /* ── Intro ──────────────────────────────────── */
   .intro-layout {
-    display: flex;
-    align-items: center;
+    display: flex; align-items: center;
     gap: clamp(2rem, 6vw, 5rem);
     padding: 0 clamp(1rem, 4vw, 3rem);
-    max-width: 780px;
-    width: 100%;
+    max-width: 780px; width: 100%;
   }
   .orb {
     width: clamp(72px, 14vw, 110px);
     height: clamp(72px, 14vw, 110px);
     border-radius: 50%;
-    background: radial-gradient(circle at 35% 35%, #7BBFC0, #5C9EA0);
+    background: radial-gradient(circle at 35% 35%, #7B9ED9, #5B7EC4);
     flex-shrink: 0;
     animation: breathe 4s ease-in-out infinite;
-    box-shadow: 0 0 0 0 rgba(127,119,221,0.4);
   }
   @keyframes breathe {
-    0%, 100% { transform: scale(1);    box-shadow: 0 0 0  0px rgba(127,119,221,0.35); }
-    50%       { transform: scale(1.16); box-shadow: 0 0 0 20px rgba(127,119,221,0); }
+    0%, 100% { transform: scale(1);    box-shadow: 0 0 0  0px rgba(92,158,160,0.35); }
+    50%       { transform: scale(1.14); box-shadow: 0 0 0 18px rgba(92,158,160,0); }
   }
-  .intro-text { flex: 1; }
+  .intro-eyebrow {
+    font-size: clamp(9px, 1.2vw, 11px);
+    font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 0.4rem;
+  }
   .intro-title {
-    font-size: clamp(18px, 3.5vw, 26px);
-    font-weight: 700;
-    letter-spacing: -0.4px;
+    font-size: clamp(20px, 3.8vw, 28px);
+    font-weight: 700; letter-spacing: -0.5px;
     margin-bottom: 0.6rem;
   }
   .intro-body {
     font-size: clamp(12px, 1.8vw, 14px);
-    color: #555;
-    line-height: 1.7;
-    margin-bottom: 1.5rem;
+    color: #555; line-height: 1.75; margin-bottom: 1.5rem;
+  }
+  .sense-pills {
+    display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.4rem;
+  }
+  .pill {
+    font-size: clamp(10px, 1.4vw, 12px);
+    padding: 4px 12px; border-radius: 999px;
+    background: rgba(92,158,160,0.1);
+    color: var(--accent); font-weight: 500;
   }
 
-  /* ── Sense screen — two-column landscape ─────────── */
+  /* ── Sense screen ───────────────────────────── */
   .sense-layout {
     display: grid;
-    grid-template-columns: 1fr 1.6fr;
+    grid-template-columns: 1fr 1.65fr;
     gap: clamp(1.5rem, 4vw, 3.5rem);
     align-items: start;
-    padding: clamp(0.75rem, 2vw, 1.5rem) clamp(1rem, 4vw, 3rem);
-    max-width: 860px;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
+    padding: clamp(0.75rem, 2vh, 1.5rem) clamp(1rem, 4vw, 3rem);
+    max-width: 860px; width: 100%; height: 100%; overflow: hidden;
   }
 
   /* Left column */
   .sense-left {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 100%;
-    padding-top: clamp(0.5rem, 2vh, 1.5rem);
+    display: flex; flex-direction: column;
+    justify-content: flex-start; height: 100%;
+    padding-top: clamp(1rem, 3vh, 2rem);
   }
-  .dots {
-    display: flex;
-    gap: 7px;
-    margin-bottom: clamp(1rem, 2.5vh, 1.75rem);
-  }
+  .dots { display: flex; gap: 7px; margin-bottom: clamp(1rem, 2.5vh, 1.75rem); }
   .dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
+    width: 7px; height: 7px; border-radius: 50%;
     background: rgba(0,0,0,0.12);
     transition: background 0.3s, transform 0.3s;
   }
-  .dot.done    { background: var(--sense-accent, #5C9EA0); }
-  .dot.current { background: var(--sense-accent, #5C9EA0); transform: scale(1.45); }
+  .dot.done    { background: var(--sense-accent); }
+  .dot.current { background: var(--sense-accent); transform: scale(1.45); }
 
   .sense-orb {
-    width: clamp(52px, 10vw, 80px);
-    height: clamp(52px, 10vw, 80px);
+    width: clamp(52px, 10vw, 76px);
+    height: clamp(52px, 10vw, 76px);
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: clamp(20px, 4vw, 32px);
-    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    font-size: clamp(22px, 4vw, 30px);
     background: var(--sense-light);
     color: var(--sense-text);
     margin-bottom: clamp(0.75rem, 2vh, 1.25rem);
-    animation: pulse-soft 3s ease-in-out infinite;
+    animation: pulse-soft 3.5s ease-in-out infinite;
   }
   @keyframes pulse-soft {
     0%, 100% { transform: scale(1); }
     50%       { transform: scale(1.07); }
   }
+  .sense-count-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: clamp(9px, 1.2vw, 11px); font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--sense-accent); margin-bottom: 0.35rem;
+  }
   .sense-heading {
     font-size: clamp(18px, 3.2vw, 26px);
-    font-weight: 700;
-    letter-spacing: -0.4px;
-    margin-bottom: 0.4rem;
+    font-weight: 700; letter-spacing: -0.4px; margin-bottom: 0.4rem;
   }
   .sense-sub {
     font-size: clamp(11px, 1.6vw, 13px);
-    color: #666;
-    line-height: 1.55;
+    color: #666; line-height: 1.55;
   }
 
   /* Right column */
   .sense-right {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
+    display: flex; flex-direction: column;
+    justify-content: space-between; height: 100%;
     padding-top: clamp(0.5rem, 2vh, 1.5rem);
     padding-bottom: clamp(0.5rem, 2vh, 1.5rem);
     overflow: hidden;
   }
   .items-list {
-    display: flex;
-    flex-direction: column;
+    display: flex; flex-direction: column;
     gap: clamp(5px, 1vh, 9px);
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    flex: 1;
-    margin-bottom: clamp(0.5rem, 1.5vh, 1rem);
-    /* hide scrollbar */
+    overflow-y: auto; -webkit-overflow-scrolling: touch;
+    flex: 1; margin-bottom: clamp(0.5rem, 1.5vh, 1rem);
     scrollbar-width: none;
   }
   .items-list::-webkit-scrollbar { display: none; }
 
   .item-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    display: flex; align-items: center; gap: 12px;
     padding: clamp(9px, 1.5vh, 13px) 14px;
     background: rgba(255,255,255,0.72);
     border: 1px solid rgba(0,0,0,0.07);
-    border-radius: 12px;
-    cursor: pointer;
-    transition: background 0.15s, transform 0.12s, opacity 0.3s;
-    user-select: none;
-    opacity: 0;
-    transform: translateY(6px);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    flex-shrink: 0;
-    /* larger tap target */
-    min-height: 44px;
+    border-radius: 12px; cursor: pointer;
+    transition: background 0.15s, transform 0.12s, opacity 0.3s, border-color 0.2s;
+    user-select: none; opacity: 0; transform: translateY(6px);
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    flex-shrink: 0; min-height: 44px;
   }
-  .item-row.visible { opacity: 1; transform: translateY(0); }
-  .item-row:active  { transform: scale(0.985); background: rgba(255,255,255,0.9); }
+  .item-row.visible  { opacity: 1; transform: translateY(0); }
+  .item-row:active   { transform: scale(0.985); }
+  .item-row.ticked   { background: rgba(255,255,255,0.9); border-color: var(--sense-accent); }
 
   .tick {
-    width: 24px;
-    height: 24px;
-    border: 1.5px solid #ccc;
-    border-radius: 6px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 24px; height: 24px;
+    border: 1.5px solid #ccc; border-radius: 6px;
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
     transition: background 0.18s, border-color 0.18s;
   }
-  .item-row.ticked .tick { background: var(--sense-accent, #5C9EA0); border-color: var(--sense-accent, #5C9EA0); }
+  .item-row.ticked .tick { background: var(--sense-accent); border-color: var(--sense-accent); }
   .tick-mark {
-    width: 11px;
-    height: 7px;
-    border-left: 2px solid #fff;
-    border-bottom: 2px solid #fff;
+    width: 11px; height: 7px;
+    border-left: 2px solid #fff; border-bottom: 2px solid #fff;
     transform: rotate(-45deg) translateY(-1px);
-    opacity: 0;
-    transition: opacity 0.15s;
+    opacity: 0; transition: opacity 0.15s;
   }
   .item-row.ticked .tick-mark { opacity: 1; }
   .item-prompt {
     font-size: clamp(12px, 1.7vw, 14px);
-    color: #333;
-    flex: 1;
-    line-height: 1.45;
+    color: #333; flex: 1; line-height: 1.45;
   }
+  .item-row.ticked .item-prompt { color: #888; text-decoration: line-through; text-decoration-color: var(--sense-accent); }
 
   /* Tally + button */
-  .sense-footer { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-shrink: 0; }
-  .tally {
-    font-size: 12px;
-    color: #999;
-    transition: color 0.3s;
-    white-space: nowrap;
+  .sense-footer {
+    display: flex; align-items: center;
+    justify-content: space-between; gap: 1rem; flex-shrink: 0;
   }
-  .tally.all-done { color: var(--sense-accent, #5C9EA0); font-weight: 600; }
+  .tally {
+    font-size: 12px; color: #aaa; transition: color 0.3s; white-space: nowrap;
+  }
+  .tally.all-done { color: var(--sense-accent); font-weight: 600; }
 
-  /* ── Buttons ─────────────────────────────────────── */
+  /* ── Buttons ────────────────────────────────── */
   .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 11px 28px;
-    font-size: clamp(13px, 1.8vw, 15px);
-    font-weight: 500;
-    border-radius: 999px;
-    cursor: pointer;
-    font-family: inherit;
-    transition: background 0.15s, opacity 0.2s, transform 0.1s;
-    border: none;
-    outline: none;
-    min-height: 44px;
-    white-space: nowrap;
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 6px; padding: 11px 28px;
+    font-size: clamp(13px, 1.8vw, 15px); font-weight: 500;
+    border-radius: 999px; cursor: pointer; font-family: inherit;
+    transition: background 0.15s, opacity 0.2s, transform 0.1s, filter 0.15s;
+    border: none; outline: none; min-height: 44px; white-space: nowrap;
   }
   .btn:active { transform: scale(0.96); }
-  .btn-primary { background: var(--sense-accent, #5C9EA0); color: #fff; }
+  .btn-primary { background: var(--sense-accent); color: #fff; }
   .btn-primary:hover { filter: brightness(1.07); }
   .btn-ghost {
     background: transparent;
-    border: 1.5px solid var(--sense-accent, #5C9EA0);
-    color: var(--sense-accent, #1E6B6E);
+    border: 1.5px solid var(--sense-accent);
+    color: var(--sense-accent);
   }
-  .btn-ghost:hover { background: var(--accent-light); }
-  .btn:disabled { opacity: 0.32; pointer-events: none; }
+  .btn-ghost:hover { background: var(--sense-light); }
+  .btn:disabled { opacity: 0.28; pointer-events: none; }
 
-  /* ── Complete ────────────────────────────────────── */
+  /* ── Complete ───────────────────────────────── */
   .complete-layout {
-    display: flex;
-    align-items: center;
+    display: flex; align-items: center;
     gap: clamp(2rem, 6vw, 5rem);
     padding: 0 clamp(1rem, 4vw, 3rem);
-    max-width: 780px;
-    width: 100%;
+    max-width: 820px; width: 100%;
   }
   .complete-icon {
-    font-size: clamp(48px, 10vw, 72px);
+    font-size: clamp(52px, 11vw, 80px);
     flex-shrink: 0;
-    animation: pop 0.5s cubic-bezier(.36,.07,.19,.97);
+    animation: pop 0.55s cubic-bezier(.36,.07,.19,.97) both;
   }
   @keyframes pop {
-    0%   { transform: scale(0.4); opacity: 0; }
-    70%  { transform: scale(1.15); }
+    0%   { transform: scale(0.3); opacity: 0; }
+    70%  { transform: scale(1.18); }
     100% { transform: scale(1); opacity: 1; }
   }
   .complete-text { flex: 1; }
+  .complete-eyebrow {
+    font-size: clamp(9px, 1.2vw, 11px); font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: #2DB77B; margin-bottom: 0.4rem;
+  }
   .complete-title {
-    font-size: clamp(18px, 3.5vw, 26px);
-    font-weight: 700;
-    letter-spacing: -0.4px;
-    margin-bottom: 0.6rem;
+    font-size: clamp(20px, 3.8vw, 28px);
+    font-weight: 700; letter-spacing: -0.5px; margin-bottom: 0.75rem;
   }
   .complete-body {
     font-size: clamp(12px, 1.8vw, 14px);
-    color: #555;
-    line-height: 1.75;
-    margin-bottom: 1.5rem;
+    color: #555; line-height: 1.8; margin-bottom: 1.5rem;
+  }
+  .complete-science {
+    font-size: clamp(11px, 1.5vw, 13px);
+    color: #888; line-height: 1.7;
+    border-left: 2px solid rgba(45,183,123,0.35);
+    padding-left: 12px; margin-bottom: 1.4rem;
+    font-style: italic;
+  }
+
+  /* ── Compact landscape (small phones) ──────── */
+  @media (max-height: 480px) and (orientation: landscape) {
+    .intro-layout { gap: clamp(1rem, 3vw, 2rem); }
+    .orb { width: 56px; height: 56px; }
+    .intro-body { margin-bottom: 1rem; }
+    .sense-pills { margin-bottom: 1rem; }
+
+    .sense-layout { gap: clamp(0.75rem, 2vw, 1.5rem); padding: 6px clamp(0.75rem, 3vw, 2rem); }
+    .dots { margin-bottom: 0.6rem; }
+    .sense-orb { width: 44px; height: 44px; font-size: 18px; margin-bottom: 0.5rem; }
+    .sense-heading { font-size: 16px; }
+    .sense-sub { font-size: 11px; }
+    .item-row { padding: 8px 12px; min-height: 38px; }
+    .btn { padding: 9px 20px; font-size: 13px; min-height: 38px; }
+
+    .complete-layout { gap: clamp(1rem, 3vw, 2rem); }
+    .complete-icon { font-size: 40px; }
+    .complete-title { font-size: 18px; margin-bottom: 0.4rem; }
+    .complete-body { margin-bottom: 0.75rem; }
+    .complete-science { margin-bottom: 1rem; }
   }
 </style>
 </head>
 <body>
 
-<!-- ── Portrait overlay ───────────────────────────── -->
+<!-- ── Portrait overlay ──────────────────────── -->
 <div id="rotate-overlay">
   <div class="rotate-icon">📱</div>
-  <p>Rotate your device to landscape<br>to use this experience.</p>
+  <p>Rotate your device to landscape<br>to use this activity.</p>
 </div>
 
-<!-- ── App ───────────────────────────────────────── -->
+<!-- ── App ───────────────────────────────────── -->
 <div id="app">
 
   <!-- Intro -->
@@ -358,9 +327,17 @@
     <div class="intro-layout">
       <div class="orb"></div>
       <div class="intro-text">
-        <h1 class="intro-title">5-4-3-2-1 Grounding</h1>
-        <p class="intro-body">When anxiety pulls you out of the present, grounding brings you back.<br>You'll move through five senses — <strong>see, touch, hear, smell, taste</strong> — noticing one thing at a time. Go at your own pace.</p>
-        <button class="btn btn-primary" onclick="startExercise()">Begin</button>
+        <p class="intro-eyebrow">Grounding Exercise</p>
+        <h1 class="intro-title">5-4-3-2-1</h1>
+        <p class="intro-body">Feeling overwhelmed or out of the present? This brings you back — right now, wherever you are. You'll move through five senses, one at a time. Tick each one as you notice it. Go slow.</p>
+        <div class="sense-pills">
+          <span class="pill">👁 See 5</span>
+          <span class="pill">✋ Touch 4</span>
+          <span class="pill">👂 Hear 3</span>
+          <span class="pill">👃 Smell 2</span>
+          <span class="pill">👅 Taste 1</span>
+        </div>
+        <button class="btn btn-primary" onclick="startExercise()">Begin →</button>
       </div>
     </div>
   </div>
@@ -368,14 +345,13 @@
   <!-- Sense -->
   <div class="screen" id="screen-sense">
     <div class="sense-layout">
-      <!-- Left: identity -->
       <div class="sense-left">
         <div class="dots" id="dots"></div>
         <div class="sense-orb" id="s-orb"></div>
+        <div class="sense-count-badge" id="s-badge"></div>
         <div class="sense-heading" id="s-heading"></div>
         <div class="sense-sub" id="s-sub"></div>
       </div>
-      <!-- Right: items -->
       <div class="sense-right">
         <div class="items-list" id="s-items"></div>
         <div class="sense-footer">
@@ -391,79 +367,94 @@
     <div class="complete-layout">
       <div class="complete-icon">🌿</div>
       <div class="complete-text">
+        <p class="complete-eyebrow">Done</p>
         <h2 class="complete-title">You're back in the room.</h2>
-        <p class="complete-body">Your nervous system just got an anchor. You can't be fully dysregulated and fully present at the same time — that's the science behind why this works.<br><br>Take one more slow breath before you carry on.</p>
-        <button class="btn btn-ghost" onclick="resetAll()">Do it again</button>
+        <p class="complete-body">You just moved through five senses — that's not nothing. Your nervous system anchored itself to right now, not whatever was pulling at you a moment ago.</p>
+        <p class="complete-science">You can't be fully dysregulated and fully present in your senses at the same time. That's not just a feeling — it's how the nervous system actually works.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <button class="btn btn-primary" onclick="resetAll()" style="--sense-accent:#2DB77B">Do it again</button>
+          <span style="font-size:12px;color:#bbb">Take one slow breath first.</span>
+        </div>
       </div>
     </div>
   </div>
 
-</div><!-- /app -->
+</div>
 
 <script>
+// ── Orientation lock ───────────────────────────
+(function() {
+  const s = screen.orientation || screen.msOrientation;
+  if (s && s.lock) s.lock('landscape').catch(() => {});
+})();
+
+// ── Data ───────────────────────────────────────
 const SENSES = [
   {
-    count: 5, label: "See", sublabel: "Look around — what's in front of you?",
-    accent: "#5C9EA0", light: "#E6F5F5", text: "#1A5C5E",
-    bg: "linear-gradient(135deg,#eef8f7 0%,#ddf0ee 100%)",
+    count: 5, icon: "👁", label: "See",
+    badge: "Find 5 things",
+    sub: "Look around the room you're in right now.",
+    accent: "#5B7EC4", light: "#EBF0FA", text: "#1A3567",
+    bg: "linear-gradient(135deg, #eef2fa 0%, #dde7f5 100%)",
     prompts: [
       "Something with a straight edge",
-      "Something that's a warm colour",
-      "Something small enough to hold",
-      "Something that casts a shadow",
-      "Something you hadn't noticed before"
+      "Something a warm colour — red, orange, yellow",
+      "Something small enough to hold in one hand",
+      "Something that's casting a shadow",
+      "Something you hadn't really noticed before today"
     ]
   },
   {
-    count: 4, label: "Touch", sublabel: "What can your hands or feet feel right now?",
+    count: 4, icon: "✋", label: "Touch",
+    badge: "Notice 4 sensations",
+    sub: "What is your body actually in contact with right now?",
     accent: "#2DB77B", light: "#E1F5EE", text: "#085041",
-    bg: "linear-gradient(135deg,#f0faf5 0%,#d6f2e6 100%)",
+    bg: "linear-gradient(135deg, #f0faf5 0%, #d6f2e6 100%)",
     prompts: [
-      "The surface you're sitting or standing on",
-      "Something with texture — rough or smooth",
-      "The temperature of the air on your skin",
-      "Anything your clothes are touching your body"
+      "The surface beneath you — chair, floor, ground",
+      "Something with texture — rough, smooth, or ridged",
+      "The temperature of the air against your skin",
+      "Where your clothes are touching your body"
     ]
   },
   {
-    count: 3, label: "Hear", sublabel: "Listen past the obvious sounds.",
+    count: 3, icon: "👂", label: "Hear",
+    badge: "Find 3 sounds",
+    sub: "Go quiet for a moment. Listen past the obvious.",
     accent: "#D4860A", light: "#FAEEDA", text: "#633806",
-    bg: "linear-gradient(135deg,#fdf6ed 0%,#faecd5 100%)",
+    bg: "linear-gradient(135deg, #fdf6ed 0%, #faecd5 100%)",
     prompts: [
       "A sound close to you",
-      "A sound further away",
-      "The quietest sound you can detect"
+      "A sound somewhere further away",
+      "The quietest sound you can find"
     ]
   },
   {
-    count: 2, label: "Smell", sublabel: "Take a slow breath in through your nose.",
+    count: 2, icon: "👃", label: "Smell",
+    badge: "Notice 2 scents",
+    sub: "Take one slow breath in through your nose. No rush.",
     accent: "#C94E30", light: "#FAECE7", text: "#712B13",
-    bg: "linear-gradient(135deg,#fdf2ef 0%,#fae2da 100%)",
+    bg: "linear-gradient(135deg, #fdf2ef 0%, #fae2da 100%)",
     prompts: [
-      "The first thing your nose picks up",
-      "Something more subtle — take another breath"
+      "The first scent your nose finds — however faint",
+      "Breathe in again. Anything more subtle?"
     ]
   },
   {
-    count: 1, label: "Taste", sublabel: "What's present in your mouth right now?",
+    count: 1, icon: "👅", label: "Taste",
+    badge: "Notice 1 taste",
+    sub: "No need to do anything — just notice what's already there.",
     accent: "#2A7DC0", light: "#E6F1FB", text: "#0C447C",
-    bg: "linear-gradient(135deg,#eef5fc 0%,#d8ebf8 100%)",
-    prompts: ["Any taste that's there — however faint"]
+    bg: "linear-gradient(135deg, #eef5fc 0%, #d8ebf8 100%)",
+    prompts: [
+      "Whatever's present in your mouth right now — even just the air"
+    ]
   }
 ];
 
 let currentSense = 0;
 let ticked = {};
 
-// ── Orientation lock ──────────────────────────────
-(function tryLockLandscape() {
-  const s = screen.orientation || screen.msOrientation;
-  if (s && s.lock) {
-    s.lock('landscape').catch(() => {});
-  }
-})();
-
-// ── Helpers ───────────────────────────────────────
 function setVar(n, v) { document.documentElement.style.setProperty(n, v); }
 
 function showScreen(id) {
@@ -478,7 +469,6 @@ function applyTheme(s) {
   document.body.style.background = s.bg;
 }
 
-// ── Dots ──────────────────────────────────────────
 function renderDots() {
   const el = document.getElementById('dots');
   el.innerHTML = '';
@@ -489,18 +479,18 @@ function renderDots() {
   });
 }
 
-// ── Sense ─────────────────────────────────────────
 function renderSense() {
   const s = SENSES[currentSense];
   applyTheme(s);
   renderDots();
 
-  document.getElementById('s-orb').textContent     = s.count;
+  document.getElementById('s-orb').textContent    = s.icon;
+  document.getElementById('s-badge').textContent  = s.badge;
   document.getElementById('s-heading').textContent = `I can ${s.label.toLowerCase()}…`;
-  document.getElementById('s-sub').textContent     = s.sublabel;
+  document.getElementById('s-sub').textContent    = s.sub;
 
   const btn = document.getElementById('s-next');
-  btn.textContent = currentSense < SENSES.length - 1 ? 'Next →' : 'Finish →';
+  btn.textContent = currentSense < SENSES.length - 1 ? 'Next →' : 'Finish ✓';
   btn.disabled = true;
 
   const list = document.getElementById('s-items');
@@ -512,10 +502,12 @@ function renderSense() {
     const row = document.createElement('div');
     row.className = 'item-row';
     row.id = 'row-' + id;
-    row.innerHTML = `<div class="tick"><div class="tick-mark"></div></div><div class="item-prompt">${p}</div>`;
+    row.innerHTML = `
+      <div class="tick"><div class="tick-mark"></div></div>
+      <div class="item-prompt">${p}</div>`;
     row.addEventListener('click', () => toggleItem(id, s));
     list.appendChild(row);
-    setTimeout(() => row.classList.add('visible'), 50 + pi * 70);
+    setTimeout(() => row.classList.add('visible'), 50 + pi * 75);
   });
 
   updateTally(s);
@@ -538,13 +530,12 @@ function updateTally(sense) {
     tallyEl.classList.add('all-done');
     btn.disabled = false;
   } else {
-    tallyEl.textContent = `${done} of ${total} noticed`;
+    tallyEl.textContent = `${done} of ${total}`;
     tallyEl.classList.remove('all-done');
     btn.disabled = true;
   }
 }
 
-// ── Nav ───────────────────────────────────────────
 function startExercise() {
   currentSense = 0;
   renderSense();
@@ -554,7 +545,7 @@ function startExercise() {
 function nextSense() {
   currentSense++;
   if (currentSense >= SENSES.length) {
-    document.body.style.background = 'linear-gradient(135deg,#f0faf5 0%,#d6f2e6 100%)';
+    document.body.style.background = 'linear-gradient(135deg, #eef2fa 0%, #dde7f5 100%)';
     showScreen('screen-complete');
   } else {
     renderSense();
